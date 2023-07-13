@@ -1,0 +1,59 @@
+.note-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    
+  }
+  
+  .note-item {
+    border: 2px solid purple; /* Adicione esta linha para definir o contorno roxo */
+    background-color:purple ;
+    color: #fff;
+    border: 2px solid #000;
+    border-radius: 4px;
+    padding: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .note-item:hover {
+    background-color: blueviolet;
+  }
+
+  #button {
+    margin: 10px 0px 20px;
+  }
+
+  .note-list-container {
+    background-color: #f2f2f2;
+    padding: 20px;
+  }
+  
+  .note-list {
+    margin-bottom: 20px;
+  }
+
+
+  .note-item-footer {
+    display: flex;
+    align-items: center;
+  }
+  
+  .note-item-footer h6 {
+    margin-right: 10px;
+  }
+  
+  .note-item-footer input[type="radio"] {
+    margin-right: 10px;
+  }
+  
+  .note-item-footer button {
+    padding: 5px 10px;
+    background-color: #f44336;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  

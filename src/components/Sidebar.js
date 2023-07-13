@@ -4,7 +4,7 @@ import '../Sidebar.css';
 const Sidebar = () => {
   return (
     <div className="sidebar">
-      <h2>Links Úteis</h2>
+      <h3>Links Úteis</h3>
       <ul>
         <li>
           <a href="https://www.example.com">Exemplo 1</a>

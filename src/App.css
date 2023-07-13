@@ -2,30 +2,33 @@ body {
   margin: 0;
   padding: 0;
   font-family: 'Roboto', sans-serif;
+  background-color: blue;
 }
 
 .app {
   display: flex;
- 
-}
+ }
 
 .sidebar {
-  width: 25%;
-  background-color: gray;
+  
+  width: 15%;
+  background-color: darkblue;
   color: #fff;
   padding: 20px;
 }
 
 .note-list {
-  width: 50%;
-  background-color: gray;
+  width: 70%;
+  background-color: darkblue;
   color: #fff;
   padding: 20px;
 }
+.task-list-container{
+   display: block;
+   background-color: darkblue;
+  }
 
-.task-list {
-  width: 25%;
-  background-color: gray;
-  color: #fff;
-  padding: 20px;
+
+footer{
+  text-align: center;
 }

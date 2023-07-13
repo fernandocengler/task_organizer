@@ -1,20 +1,40 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import '../NoteList.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const NoteList = () => {
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
+  const [currentTime, setCurrentTime] = useState('');
+  const [editIndex, setEditIndex] = useState(-1);
 
   const addNote = () => {
-    if (newNote) {
+    if (newNote && startTime) {
       const note = {
         content: newNote,
+        startTime: startTime,
+        endTime: endTime ? endTime : null,
         timestamp: new Date().toLocaleString()
       };
 
-      setNotes([...notes, note]);
+      const column = notes.length % 2 === 0 ? 0 : 1;
+      const updatedNotes = [...notes];
+
+      if (editIndex !== -1) {
+        // Editar nota existente
+        updatedNotes[editIndex] = { ...note, column };
+      } else {
+        // Adicionar nova nota
+        updatedNotes.push({ ...note, column });
+      }
+
+      setNotes(updatedNotes);
       setNewNote('');
+      setStartTime('');
+      setEndTime('');
+      setEditIndex(-1);
     }
   };
 
@@ -24,78 +44,104 @@ const NoteList = () => {
     setNotes(updatedNotes);
   };
 
+  const editNote = (index) => {
+    const note = notes[index];
+    setNewNote(note.content);
+    setStartTime(note.startTime);
+    setEndTime(note.endTime || '');
+    setEditIndex(index);
+  };
+
   const handleNoteChange = (event) => {
     setNewNote(event.target.value);
   };
 
-  useEffect(() => {
-    const handleBeforeUnload = (event) => {
-      event.preventDefault();
-      event.returnValue = ''; // Força a exibição da mensagem de confirmação
+  const getCurrentTime = () => {
+    const currentTime = new Date().toLocaleTimeString();
+    setCurrentTime(currentTime);
+    setStartTime(currentTime);
+  };
 
-      // Mensagem de confirmação personalizada
-      const confirmationMessage =
-        'Tem certeza de que deseja sair? Suas alterações não serão salvas.';
-
-      return confirmationMessage;
-    };
-
-    window.addEventListener('beforeunload', handleBeforeUnload);
-
-    return () => {
-      window.removeEventListener('beforeunload', handleBeforeUnload);
-    };
-  }, []);
-
-  useEffect(() => {
-    const calculateTextareaRows = () => {
-      const noteLines = newNote.split('\n').length;
-      const minRows = 4;
-      const maxRows = 10;
-      const rows = Math.min(Math.max(noteLines, minRows), maxRows);
-      return rows;
-    };
-
-    const textarea = document.querySelector('.note-list textarea');
-    if (textarea) {
-      textarea.rows = calculateTextareaRows();
-    }
-  }, [newNote]);
+  const handleRadioChange = () => {
+    const currentTime = new Date().toLocaleTimeString();
+    setEndTime(currentTime);
+  };
 
   return (
-    <div className="note-list">
+    <div className="container">
       <h1>Tarefas</h1>
-      <textarea
-        value={newNote}
-        onChange={handleNoteChange}
-        placeholder="Adicionar nota"
-        rows={4}
-      />
-      <button id="button" className="btn btn-dark" onClick={addNote}>
-        Adicionar
-      </button>
-
-      {notes.map((note, index) => (
-        <div key={index} className="note-item">
-          <p>{note.content}</p>
-          <p>{note.timestamp}</p>
-          <div className="note-item-footer">
-            <h6>Concluido</h6>
-            <input type='radio'></input>
-            </div>
-            <button onClick={() => deleteNote(index)}>Excluir</button>
+      <div className="row">
+        <div className="col-md-4">
+          <label htmlFor="start-time">Início:</label>
+          <input
+            type="text"
+            id="start-time"
+            value={startTime}
+            onChange={(event) => setStartTime(event.target.value)}
+            placeholder="HH:MM"
+          />
+          <button className="btn btn-primary" onClick={getCurrentTime}>
+            Buscar Hora Atual
+          </button>
         </div>
-      ))}
+        <div className="col-md-4">
+          <label htmlFor="end-time">Fim:</label>
+          <input
+            type="text"
+            id="end-time"
+            value={endTime}
+            onChange={(event) => setEndTime(event.target.value)}
+            placeholder="HH:MM"
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col-md-8">
+          <textarea
+            value={newNote}
+            onChange={handleNoteChange}
+            placeholder="Adicionar nota"
+            rows={4}
+          />
+        </div>
+        <div className="col-md-6 d-flex align-items-end">
+          <button className="btn btn-dark" onClick={addNote}>
+            {editIndex !== -1 ? 'Editar' : 'Adicionar'}
+          </button>
+        </div>
+      </div>
+      <div className="row">
+        {notes.map((note, index) => (
+          <div key={index} className={`col-md-6 note-item note-column-${note.column}`}>
+            <div className="note-content">
+              <p>{note.content}</p>
+              <p>Inicio: {note.startTime}</p>
+              {note.endTime !== null && <p>Fim: {note.endTime}</p>}
+              <p>{note.timestamp}</p>
+            </div>
+            <div className="note-item-footer">
+              <h6>Concluído</h6>
+              <input type="radio" onChange={handleRadioChange} />
+            </div>
+            <div>
+              <button
+                className="btn btn-primary"
+                onClick={() => editNote(index)}
+              >
+                Editar
+              </button>
+              <button
+                className="btn btn-danger"
+                onClick={() => deleteNote(index)}
+              >
+                Excluir
+              </button>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };
 
 export default NoteList;
-
-
-
-
-
-
-
-

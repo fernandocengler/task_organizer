@@ -8,6 +8,7 @@ const NoteList = () => {
   const [startTime, setStartTime] = useState('');
   const [endTime, setEndTime] = useState('');
   const [currentTime, setCurrentTime] = useState('');
+  const [currentTimeEnd, setCurrentTimeEnd] = useState('');
   const [editIndex, setEditIndex] = useState(-1);
 
   const addNote = () => {
@@ -62,6 +63,12 @@ const NoteList = () => {
     setStartTime(currentTime);
   };
 
+  const getCurrentTimeEnd = () => {
+    const currentTime = new Date().toLocaleTimeString();
+    setCurrentTimeEnd(currentTime);
+    setEndTime(currentTime);
+  };
+
   const handleRadioChange = () => {
     const currentTime = new Date().toLocaleTimeString();
     setEndTime(currentTime);
@@ -72,27 +79,46 @@ const NoteList = () => {
       <h1>Tarefas</h1>
       <div className="row">
         <div className="col-md-4">
-          <label htmlFor="start-time">Início:</label>
-          <input
-            type="text"
-            id="start-time"
-            value={startTime}
-            onChange={(event) => setStartTime(event.target.value)}
-            placeholder="HH:MM"
-          />
-          <button className="btn btn-primary" onClick={getCurrentTime}>
-            Buscar Hora Atual
-          </button>
+          <label>Inicio</label>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              id="start-time"
+              value={startTime}
+              onChange={(event) => setStartTime(event.target.value)}
+              placeholder="HH:MM"
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-primary"
+                onClick={getCurrentTime}
+              >
+               Now
+              </button>
+            </div>
+          </div>
         </div>
         <div className="col-md-4">
           <label htmlFor="end-time">Fim:</label>
-          <input
-            type="text"
-            id="end-time"
-            value={endTime}
-            onChange={(event) => setEndTime(event.target.value)}
-            placeholder="HH:MM"
-          />
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              id="end-time"
+              value={endTime}
+              onChange={(event) => setEndTime(event.target.value)}
+              placeholder="HH:MM"
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-primary"
+                onClick={getCurrentTimeEnd}
+              >
+                Now
+              </button>
+            </div>
+          </div>
         </div>
       </div>
       <div className="row">
@@ -100,8 +126,9 @@ const NoteList = () => {
           <textarea
             value={newNote}
             onChange={handleNoteChange}
-            placeholder="Adicionar nota"
-            rows={4}
+            defaultValue={`Cliente: \nContato: \nProblema:`}
+            rows={8}
+            style={{ width: '92%' }}
           />
         </div>
         <div className="col-md-6 d-flex align-items-end">
@@ -117,7 +144,7 @@ const NoteList = () => {
               <p>{note.content}</p>
               <p>Inicio: {note.startTime}</p>
               {note.endTime !== null && <p>Fim: {note.endTime}</p>}
-              <p>{note.timestamp}</p>
+              
             </div>
             <div className="note-item-footer">
               <h6>Concluído</h6>
